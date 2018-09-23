@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="D_sz64DZ1b38eNfy3sac0h9jaE2HKjSg0qeS_6Ar_aw" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.0.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="ASP.NET,Claims,ClaimsIdentity,WIF,Authentication,AuthenticationMiddleware," />
+
+
+<meta name="description" content="The original motivation for this article is about following issue:  how does the claim identity information persist after login in ASP.NET why does updating of claim identity in owin context not persi">
+<meta name="keywords" content="ASP.NET,Claims,ClaimsIdentity,WIF,Authentication,AuthenticationMiddleware">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claims Identity in ASP.NET authentication Middleware">
+<meta property="og:url" content="http://winterTTr.me/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/index.html">
+<meta property="og:site_name" content="Life &amp; Note">
+<meta property="og:description" content="The original motivation for this article is about following issue:  how does the claim identity information persist after login in ASP.NET why does updating of claim identity in owin context not persi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/cookie_authentication_middleware_invoke.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/authentication_handler.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/teardown.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/individual_user_account.jpg">
+<meta property="og:updated_time" content="2018-09-23T09:05:06.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Claims Identity in ASP.NET authentication Middleware">
+<meta name="twitter:description" content="The original motivation for this article is about following issue:  how does the claim identity information persist after login in ASP.NET why does updating of claim identity in owin context not persi">
+<meta name="twitter:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/cookie_authentication_middleware_invoke.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Life & Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://winterTTr.me/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>Claims Identity in ASP.NET authentication Middleware | Life & Note</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67136287-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-67136287-1');
+</script>
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12217b6eff7690192f4e4469013eee76";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Life & Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">winterTTr Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories<span class="badge">13</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives<span class="badge">21</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags<span class="badge">74</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />Sitemap</a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WRpxR8GrCr4jNe6LcLyU','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterTTr.me/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winterTTr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Life & Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Claims Identity in ASP.NET authentication Middleware</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-12-12T21:10:14+00:00">2015-12-12</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/ASP-NET/" itemprop="url" rel="index"><span itemprop="name">ASP.NET</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/" class="leancloud_visitors" data-flag-title="Claims Identity in ASP.NET authentication Middleware">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>The original motivation for this article is about following issue:</p>
+<ul>
+<li>how does the claim identity information persist after login in ASP.NET</li>
+<li>why does updating of claim identity in owin context not persist in further request</li>
+</ul>
+<p>The <code>WIF(Windows Identity Foundation)</code> provides a Claims-Based Identity Model. And in <code>ASP.NET</code>, we can already build a Claims-Aware ASP.NET Web Application. Especially, when using with different kind of authentication middleware, <code>WIF</code> provides the same abstract layer to access the identity information across the whole asp.net pipeline context.</p>
+<p>In this article we will talk about some detail about asp.net authentication middleware based on the <code>CookieAuthenticationMiddleware</code>. At the end, let’s discuss more about persist claim in cookie across request.</p>
+<a id="more"></a>
+<h1 id="Owin-Middleware"><a href="#Owin-Middleware" class="headerlink" title="Owin Middleware"></a>Owin Middleware</h1><p>Simple speaking, Owin pipeline is a link of middleware, and the request will dive into this link to the end(or short-circuited before end), and the response will pop up back though the pipeline middleware. When coming through the middleware, this gives opportunity to middleware to process and even short-circuit the whole process line.</p>
+<pre><code>Request
+       /=====\        /=====\        /=====\
+=====&gt; |     | =====&gt; |     | =====&gt; |     |
+       | MW1 |        | MW2 |        | MW3 |
+&lt;===== |     | &lt;===== |     | &lt;===== |     | &lt;== Response
+       \=====/        \=====/        \=====/
+</code></pre><p>This diagram is a very simple and straightforward explanation about the Owin Middleware.<br>And authentication middleware if one kind of middleware that will give their effect to the request and response process.</p>
+<figure class="highlight csharp"><figcaption><span>OwinMiddleware</span><a href="https://github.com/yreynhout/katana-clone/blob/ac4f4f48a3c56221faa554995d8b8c1940b5f838/src/Microsoft.Owin/OwinMiddleware.cs" target="_blank" rel="noopener">OwinMiddleware.cs</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Threading.Tasks;</span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Microsoft.Owin</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">OwinMiddleware</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="title">OwinMiddleware</span>(<span class="params">OwinMiddleware next</span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            Next = next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">protected</span> OwinMiddleware Next &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Task <span class="title">Invoke</span>(<span class="params">IOwinContext context</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Here is the definition the <code>OwinMiddleware</code>, there is two key pieces in code:</p>
+<ol>
+<li>next: reference to the next middleware in pipeline </li>
+<li><code>Invoke</code> abstract function: this is the how this middleware could perform on the owin conext. The usually pattern would be “Before action” + “next.Invoke()” + “after action”.</li>
+</ol>
+<h1 id="AuthenticationMiddleware"><a href="#AuthenticationMiddleware" class="headerlink" title="AuthenticationMiddleware"></a>AuthenticationMiddleware</h1><p><code>AuthenticationMiddleware</code> is the base class for all authentication middleware. And it implement the basic pattern for the <code>Invoke</code> function for a concrete authentication middleware. Here is the flow:</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/cookie_authentication_middleware_invoke.jpg" alt="cookie_authentication_middleware_invoke.jpg"></p>
+<p>And more detail code is as below:<br><figure class="highlight csharp"><figcaption><span>AuthenticationMiddleware</span><a href="https://github.com/yreynhout/katana-clone/blob/ac4f4f48a3c56221faa554995d8b8c1940b5f838/src/Microsoft.Owin.Security/Infrastructure/AuthenticationMiddleware.cs" target="_blank" rel="noopener">AuthenticationMiddleware.cs</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">async</span> Task <span class="title">Invoke</span>(<span class="params">IOwinContext context</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AuthenticationHandler&lt;TOptions&gt; handler = CreateHandler();</span><br><span class="line">    <span class="keyword">await</span> handler.Initialize(Options, context);</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">await</span> handler.InvokeAsync())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">await</span> Next.Invoke(context);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">await</span> handler.TeardownAsync();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>So we can see that, the concrete authentication middleware will create an authentication handler and use that handler for further processing. The main logic for a authentication middleware is mainly about how the handler is implemented.<br>So let’s see the peice of code for <code>CreateHandler</code> in <code>CookieAuthenticationMiddleware</code>:<br><figure class="highlight csharp"><figcaption><span>CookieAuthenticationMiddleware</span><a href="https://github.com/yreynhout/katana-clone/blob/ac4f4f48a3c56221faa554995d8b8c1940b5f838/src/Microsoft.Owin.Security.Cookies/CookieAuthenticationMiddleware.cs" target="_blank" rel="noopener">CookieAuthenticationMiddleware.cs</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> AuthenticationHandler&lt;CookieAuthenticationOptions&gt; <span class="title">CreateHandler</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> CookieAuthenticationHandler(_logger);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="AuthenticationHandler"><a href="#AuthenticationHandler" class="headerlink" title="AuthenticationHandler"></a>AuthenticationHandler</h1><p>So the main logic of authentication middleware will be focus on authentication handler. Let see a deeper graph when we expand the <code>AuthenticationHandler</code> level:</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/authentication_handler.jpg" alt="authentication_handler.jpg"></p>
+<p>The blue part will be the main part of how <code>AuthenticationHandler</code> works. And the red part will be how a specific authentication handler, here is <code>CookieAuthenticationHandler</code> implemented.</p>
+<h1 id="CookieAuthenticatonHandler"><a href="#CookieAuthenticatonHandler" class="headerlink" title="CookieAuthenticatonHandler"></a>CookieAuthenticatonHandler</h1><p>We do not have the plan to dive into every detail of how CookieAuthenticationHandler implemented. So we only focus to original issue, how claim identity does the persistence underlying.</p>
+<p>In fact, originally, i thought the claim identity which we can access via <code>User.Identity</code> will be persist in cookie. So if I update the claims in <code>User</code> context, everything will be persist ( i mean update ) into the cookie later. So I can access the updated value in later request.</p>
+<p>However, the thing is not as I wish.</p>
+<p>Here is the expanded version for <code>CookieAuthenticationHandler</code>:<br><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/teardown.jpg" alt="teardown.jpg"></p>
+<p>The <code>TeardownAsync</code> will perform the persistence logic from the identity, but not like we wish. From the diagram, we found that findally, the <code>CookieAuthenticationHandler</code> use the <code>ApplyResponseGrantAsync</code> to save information. And what is <code>Grant</code>?</p>
+<p>We can refer to more detail from the implementation:<br><figure class="highlight csharp"><figcaption><span>CookieAuthenticationHandler</span><a href="https://github.com/yreynhout/katana-clone/blob/ac4f4f48a3c56221faa554995d8b8c1940b5f838/src/Microsoft.Owin.Security.Cookies/CookieAuthenticationHandler.cs#L81" target="_blank" rel="noopener">CookieAuthenticationHandler.cs</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">async</span> Task <span class="title">ApplyResponseGrantAsync</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AuthenticationResponseGrant signin = Helper.LookupSignIn(Options.AuthenticationType);</span><br><span class="line">    <span class="keyword">bool</span> shouldSignin = signin != <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// &lt;&lt;&lt; ignore some code &gt;&gt;&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (shouldSignin)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> context = <span class="keyword">new</span> CookieResponseSignInContext(</span><br><span class="line">            Context,</span><br><span class="line">            Options,</span><br><span class="line">            Options.AuthenticationType,</span><br><span class="line">            signin.Identity,</span><br><span class="line">            signin.Properties);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// &lt;&lt;&lt; ignore some code &gt;&gt;&gt;</span></span><br><span class="line"></span><br><span class="line">        Response.Cookies.Append(</span><br><span class="line">            Options.CookieName,</span><br><span class="line">            cookieValue,</span><br><span class="line">            cookieOptions);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// &lt;&lt;&lt; ignore some code &gt;&gt;&gt;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>From the code, two things need to pay attention to:</p>
+<ol>
+<li>the handler will save the <code>grant</code> into cookie</li>
+<li>the action in step 1 will only happen when we can have this <code>grant</code></li>
+</ol>
+<p>Ok, let’s find the final piece about this <code>grant</code></p>
+<figure class="highlight csharp"><figcaption><span>SecurityHelper</span><a href="https://github.com/yreynhout/katana-clone/blob/ac4f4f48a3c56221faa554995d8b8c1940b5f838/src/Microsoft.Owin.Security/Infrastructure/SecurityHelper.cs#L102" target="_blank" rel="noopener">SecurityHelper.cs</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> AuthenticationResponseGrant <span class="title">LookupSignIn</span>(<span class="params"><span class="keyword">string</span> authenticationType</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (authenticationType == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArgumentNullException(<span class="string">"authenticationType"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    AuthenticationResponseGrant grant = _context.Authentication.AuthenticationResponseGrant;</span><br><span class="line">    <span class="keyword">if</span> (grant == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> claimsIdentity <span class="keyword">in</span> grant.Principal.Identities)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">string</span>.Equals(authenticationType, claimsIdentity.AuthenticationType, StringComparison.Ordinal))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> AuthenticationResponseGrant(claimsIdentity, grant.Properties ?? <span class="keyword">new</span> AuthenticationProperties());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>So we finally found where the data comes from - <strong>Authentication.AuthenticationResponseGrant</strong>.</p>
+<h1 id="AuthenticationResponseGrant"><a href="#AuthenticationResponseGrant" class="headerlink" title="AuthenticationResponseGrant"></a>AuthenticationResponseGrant</h1><p><code>Grant</code> is the concept of the information that we retreive after we do the authentication. If the cookie handler save this <strong>grant</strong> into the cookie, we need to find where is grant come from.<br><figure class="highlight csharp"><figcaption><span>AuthenticationManager</span><a href="https://github.com/yreynhout/katana-clone/blob/ac4f4f48a3c56221faa554995d8b8c1940b5f838/src/Microsoft.Owin/Security/AuthenticationManager.cs#L200" target="_blank" rel="noopener">AuthenticationManager.cs</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SignIn</span>(<span class="params">AuthenticationProperties properties, <span class="keyword">params</span> ClaimsIdentity[] identities</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AuthenticationResponseRevoke priorRevoke = AuthenticationResponseRevoke;</span><br><span class="line">    <span class="keyword">if</span> (priorRevoke != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Scan the sign-outs's and remove any with a matching auth type.</span></span><br><span class="line">        <span class="keyword">string</span>[] filteredSignOuts = priorRevoke.AuthenticationTypes</span><br><span class="line">            .Where(authType =&gt; !identities.Any(identity =&gt; identity.AuthenticationType.Equals(authType, StringComparison.Ordinal)))</span><br><span class="line">            .ToArray();</span><br><span class="line">        <span class="keyword">if</span> (filteredSignOuts.Length &lt; priorRevoke.AuthenticationTypes.Length)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (filteredSignOuts.Length == <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                AuthenticationResponseRevoke = <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                AuthenticationResponseRevoke = <span class="keyword">new</span> AuthenticationResponseRevoke(filteredSignOuts);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    AuthenticationResponseGrant priorGrant = AuthenticationResponseGrant;</span><br><span class="line">    <span class="keyword">if</span> (priorGrant == <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        AuthenticationResponseGrant = <span class="keyword">new</span> AuthenticationResponseGrant(<span class="keyword">new</span> ClaimsPrincipal(identities), properties);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        ClaimsIdentity[] mergedIdentities = priorGrant.Principal.Identities.Concat(identities).ToArray();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (properties != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Update prior properties</span></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> propertiesPair <span class="keyword">in</span> properties.Dictionary)</span><br><span class="line">            &#123;</span><br><span class="line">                priorGrant.Properties.Dictionary[propertiesPair.Key] = propertiesPair.Value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        AuthenticationResponseGrant = <span class="keyword">new</span> AuthenticationResponseGrant(<span class="keyword">new</span> ClaimsPrincipal(mergedIdentities), priorGrant.Properties);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>So in fact, this <code>grant</code> information is set when we call the <code>SignIn</code> function of the authenticaton manager. And if we do not call <code>SignIn</code>, the <strong>AuthenticationResponseGrant</strong> will be null. In that case, the cookie will not be updated.</p>
+<p>And the <code>User.Identity</code> will <strong>NOT</strong> set to this authentication grant if <code>SignIn</code> is not called. That is why even update the <code>User.Identity</code> but those updated information will not take effect for any further request in asp.net.</p>
+<p>This is also explain every detail about this stackoverflow question <a href="http://stackoverflow.com/questions/25292137/persisting-claims-across-requests" target="_blank" rel="noopener">Persisting claims across requests</a></p>
+<h1 id="How-to-Persist-Claim"><a href="#How-to-Persist-Claim" class="headerlink" title="How to Persist Claim"></a>How to Persist Claim</h1><p>After dive into such more detail from code level, let’s discuss about the original topic.</p>
+<p>I found a solution here from the stackoverflow <a href="http://stackoverflow.com/questions/24587414/how-to-update-a-claim-in-asp-net-identity" target="_blank" rel="noopener">How to update a claim in ASP.NET Identity?</a>, this solution will set the <code>AuthenticationResponseGrant</code> explicitly when try to update the claim items, this will trigger the sign in logic when <code>Teardown</code> is called.</p>
+<p>In fact, this is one of the solution that indeed take effect. But it has a potential issue, that is, in fact, such kind of code will trigger the <strong>sign in</strong> logic underlying, and the <strong>sign in</strong> logic will update the cookie expiration time. This behavior works as you sigin in again when you explicitly set the <code>AuthenticationResponseGrant</code>. Of course, if the cookie expiration time is not a problem for your business logic, espeically when you use the <a href="https://github.com/yreynhout/katana-clone/blob/ac4f4f48a3c56221faa554995d8b8c1940b5f838/src/Microsoft.Owin.Security.Cookies/CookieAuthenticationOptions.cs#L85" target="_blank" rel="noopener">SlidingExpiration</a>, everyting should be fine.</p>
+<p>But for my business which use the cookie authentication expiration as the web application login expiration. This will be a problem, and i should not use this way to update claim information in cookie.</p>
+<p>So based on the implementation of Katana( i do not read the latest code, so correct me if i miss something), the identity saved in cookie is not designed for dynamically update. Those claim identity in the cookie is represented as a unique identity information that <strong>binding to a specific login</strong> and it should be immutable. And, updating the claim data in cookie with <code>AuthenticationResponseGrant</code> means to a totally new login instead of updating the current login context. So all the claim data that is persisted in the cookie should not be updated within a specific login session. So that is why we can found that most of the authenticaton middleware save the claim identity information belong to the login itself to the cookie.</p>
+<p>Yes, you may say that, how about those that do not belong to so-called “login information”, where should I save it? In fact, within asp.net project template the microsoft already provide us the way when you select “Individual Use Account”.</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-12-12-Claim-Identity-In-AspNet-Authentication-Middleware/individual_user_account.jpg" alt="individual_user_account.jpg"></p>
+<p>I do not want to dive more code here, the magic is <code>ApplicationUserManager</code>. This manager is using <code>UserStore</code> binding to a entityframework <code>DbContext</code> object. We can use the user manager’s <code>AddClaimAsync</code>|<code>GetClaimAsync</code>|<code>RemoveClaimAsync</code> to manipulate the claim data we want to save. The user manager will sync those saved claim everytime when the next query is comming, like what we wish. And yes, i think you already guess the conclusion, user manager is using the database to save the claim identity information underlying.</p>
+<p>And one more option, if you just want to save some data between request, and those information is not a sensitive data, such as access code, you can use the <code>Request.Cookie</code> directly, and you can see those data from chrome debug panel under <code>Resource</code> tab directly. More simple, right?</p>
+<p>Ok, claim identity in asp.net is so a big topic so i would talk more aspect on other article, let’s end here.<br>Any question, please just reply and discuss with me :-)</p>
+<hr>
+<p><strong>References</strong>:</p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/25292137/persisting-claims-across-requests" target="_blank" rel="noopener">Persisting claims across requests</a></li>
+<li><a href="http://stackoverflow.com/questions/19192428/server-side-claims-caching-with-owin-authentication" target="_blank" rel="noopener">Server side claims caching with Owin Authentication</a></li>
+<li><a href="http://stackoverflow.com/questions/24587414/how-to-update-a-claim-in-asp-net-identity" target="_blank" rel="noopener">How to update a claim in ASP.NET Identity?</a></li>
+</ul>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="winterTTr WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="winterTTr Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:</strong>winterTTr</li>
+  <li class="post-copyright-link">
+    <strong>Post link:</strong>
+    <a href="http://winterTTr.me/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/" title="Claims Identity in ASP.NET authentication Middleware">http://winterTTr.me/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ASP-NET/" rel="tag"># ASP.NET</a>
+          
+            <a href="/tags/Claims/" rel="tag"># Claims</a>
+          
+            <a href="/tags/ClaimsIdentity/" rel="tag"># ClaimsIdentity</a>
+          
+            <a href="/tags/WIF/" rel="tag"># WIF</a>
+          
+            <a href="/tags/Authentication/" rel="tag"># Authentication</a>
+          
+            <a href="/tags/AuthenticationMiddleware/" rel="tag"># AuthenticationMiddleware</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/28/Got-the-redeem-code-for-transloader/" rel="next" title="无意中中了一枚transloader的兑换码">
+                <i class="fa fa-chevron-left"></i> 无意中中了一枚transloader的兑换码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/09/travel-japan-setonaikai-north/" rel="prev" title="再游日本关西--濑户内海北岸游(姬路，冈山，仓敷）">
+                再游日本关西--濑户内海北岸游(姬路，冈山，仓敷） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="winterTTr" />
+            
+              <p class="site-author-name" itemprop="name">winterTTr</p>
+              <p class="site-description motion-element" itemprop="description">Memo down pieces of Life</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">65</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/winterTTr" target="_blank" title="Github"><i class="fa fa-fw fa-globe"></i>Github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/winterTTr" target="_blank" title="Twitter"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/winterTTr" target="_blank" title="Weibo"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://douban.com/people/winterTTr" target="_blank" title="Douban"><i class="fa fa-fw fa-globe"></i>Douban</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.zhihu.com/people/winterttr" target="_blank" title="Zhihu"><i class="fa fa-fw fa-globe"></i>Zhihu</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:winterTTr@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sspai.com" title="少数派" target="_blank">少数派</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.masteringemacs.org/" title="Master Emacs" target="_blank">Master Emacs</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Owin-Middleware"><span class="nav-text">Owin Middleware</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AuthenticationMiddleware"><span class="nav-text">AuthenticationMiddleware</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AuthenticationHandler"><span class="nav-text">AuthenticationHandler</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CookieAuthenticatonHandler"><span class="nav-text">CookieAuthenticatonHandler</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AuthenticationResponseGrant"><span class="nav-text">AuthenticationResponseGrant</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#How-to-Persist-Claim"><span class="nav-text">How to Persist Claim</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">winterTTr</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Pisces</a> v6.0.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://winterTTr.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://winterTTr.me/2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/';
+        this.page.identifier = '2015/12/12/Claim-Identity-In-AspNet-Authentication-Middleware/';
+        this.page.title = 'Claims Identity in ASP.NET authentication Middleware';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://winterTTr.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("WK0MG0KyIjCmTQQtCU3Fqx5A", "uiAElW6J3hMrmwqoatM9drkx");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

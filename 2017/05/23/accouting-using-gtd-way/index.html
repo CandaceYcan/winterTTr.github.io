@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="D_sz64DZ1b38eNfy3sac0h9jaE2HKjSg0qeS_6Ar_aw" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.0.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="效率,iOS,应用,workflow,omnifocus,记账," />
+
+
+<meta name="description" content="用手机记账，一直存在着很多的痛点。所以在这篇文章中，给大家提供一种新的思路，来改进记账的工作流，利用已有的一些效率工具缓解记账流程中的一些痛点。">
+<meta name="keywords" content="效率,iOS,应用,workflow,omnifocus,记账">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用GTD的思路记账">
+<meta property="og:url" content="http://winterTTr.me/2017/05/23/accouting-using-gtd-way/index.html">
+<meta property="og:site_name" content="Life &amp; Note">
+<meta property="og:description" content="用手机记账，一直存在着很多的痛点。所以在这篇文章中，给大家提供一种新的思路，来改进记账的工作流，利用已有的一些效率工具缓解记账流程中的一些痛点。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2017-05-23-accouting-using-gtd-way/MoneyWiz2-layout.png">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2017-05-23-accouting-using-gtd-way/accouting-workflow.gif">
+<meta property="og:updated_time" content="2018-09-23T09:05:06.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用GTD的思路记账">
+<meta name="twitter:description" content="用手机记账，一直存在着很多的痛点。所以在这篇文章中，给大家提供一种新的思路，来改进记账的工作流，利用已有的一些效率工具缓解记账流程中的一些痛点。">
+<meta name="twitter:image" content="https://winterttrgithubio.blob.core.windows.net/images/2017-05-23-accouting-using-gtd-way/MoneyWiz2-layout.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Life & Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://winterTTr.me/2017/05/23/accouting-using-gtd-way/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>用GTD的思路记账 | Life & Note</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67136287-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-67136287-1');
+</script>
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12217b6eff7690192f4e4469013eee76";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Life & Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">winterTTr Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories<span class="badge">13</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives<span class="badge">21</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags<span class="badge">74</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />Sitemap</a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WRpxR8GrCr4jNe6LcLyU','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterTTr.me/2017/05/23/accouting-using-gtd-way/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winterTTr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Life & Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用GTD的思路记账</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-23T14:31:02+00:00">2017-05-23</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/效率/" itemprop="url" rel="index"><span itemprop="name">效率</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/23/accouting-using-gtd-way/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/05/23/accouting-using-gtd-way/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/05/23/accouting-using-gtd-way/" class="leancloud_visitors" data-flag-title="用GTD的思路记账">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>用手机记账，一直存在着很多的痛点。所以在这篇文章中，给大家提供一种新的思路，来改进记账的工作流，利用已有的一些效率工具缓解记账流程中的一些痛点。</p>
+<a id="more"></a>
+<h1 id="记账究竟是记什么"><a href="#记账究竟是记什么" class="headerlink" title="记账究竟是记什么"></a>记账究竟是记什么</h1><h2 id="交易-transaction-定义了什么"><a href="#交易-transaction-定义了什么" class="headerlink" title="交易(transaction)定义了什么"></a>交易(transaction)定义了什么</h2><p>在记账的时候，每一条交易记录了什么？<br>或者换个角度来说，“帐”单里面的条目究竟定义和记录了什么。<br>我习惯会用下面的公式来给出一种解释：</p>
+<p>$$ (d_1,d_2 … d_n ) \iff m$$</p>
+<p>其中$d_x$代表数据维度，$m$代表一个数值。</p>
+<p>所以：<br><blockquote class="blockquote-center"><p>每一条“账目”，就是在一定的数据纬度上分割的数值。 </p>
+</blockquote></p>
+<p>这样的公式和解释似乎比较抽象，所以可以用一个例子说明一下。首先定义几个记账中常用的数据纬度，例如，时间、地点、商家等，而数值也就是消费的金额。于是可以得到下面这样的一种定义</p>
+<p>$$(时间, 地点, 商家) \iff 消费金额 $$</p>
+<p>好了，在这个定义的下，账单的结果大概率会变成下面这样：</p>
+<ul>
+<li><strong>(2017年6月1日 12:00 PM, 大悦城, 将太无二 ) -&gt; 100</strong></li>
+<li><strong>(2017年6月1日 15:00 PM, 大悦城, 金逸影城 ) -&gt; 60</strong></li>
+</ul>
+<p>基于这个简单的例子，大家对上面记账条目的公式应该了直观的理解。联系到实际中记账的各种软件中，会发现很多都是基于这样的模型去定义记账的内容。</p>
+<p>用我个人习惯使用<em>MoneyWiz 2</em>举例，下图中的是<em>MoneyWzi 2</em>中的<code>交易布局</code>界面，在这个界面的设置基本上也展示了<em>MoneyWzi 2</em>中对记账条目的定义。</p>
+<img src="https://winterttrgithubio.blob.core.windows.net/images/2017-05-23-accouting-using-gtd-way/MoneyWiz2-layout.png" width="300">
+<h2 id="账目报告展示了什么"><a href="#账目报告展示了什么" class="headerlink" title="账目报告展示了什么"></a>账目报告展示了什么</h2><p>基于前面的数据模型定义，进一步来说，对于很多软件中的的<code>财报</code>、<code>月度总结</code>之类的界面，就是在某一个或者多个数据维度上对最终数值进行的聚合(aggregation)操作。</p>
+<p>依旧用上面的例子，在<em>2017年6月1日</em>的日度消费总结，就是针对所有的数据在<code>时间</code>维度等于<em>2017年6月1日</em>的条目，对数值（消费金额）列进行<code>加</code>操作的聚合，也就是会变成160。<br>虽然这只是个最简单的例子，对于很多记账软件来讲，更加复杂的报告，基本上是在两个方面做文章：</p>
+<ul>
+<li>数据维度的划分能力，例如：按月、按周、按照消费商家等等等</li>
+<li>数据聚合方法，这方面做文章的并不多，在实际中会发现，很多时候的复杂报告，其实只是使用了简单的<code>加</code>操作</li>
+</ul>
+<h1 id="为什么我需要改进记账流程"><a href="#为什么我需要改进记账流程" class="headerlink" title="为什么我需要改进记账流程"></a>为什么我需要改进记账流程</h1><blockquote class="blockquote-center"><p><strong>WHY</strong> </p>
+</blockquote>
+<p>谈了这么多的定义，下面来说说，为什么我们需要改进记账流程。</p>
+<p>很多时候大家会把记账和省钱关联在一起，但实际上，更多人记账的目的，只是在一定程度上了解自己的消费内容和结构，这就和记录体重、每天的步数一样。<br>其实问过很多身边的朋友，都说使用过记账软件，短的几天几周，长的半年，最后都都没有坚持下来。大多数人没办法坚持下来，很多时候在抱怨记账中的一些痛点：</p>
+<p>其中经常提到的一些话题：</p>
+<ol>
+<li>记账太麻烦了</li>
+<li>消费的时候没功夫记账，等过后也就忘了</li>
+<li>现场没时间输入呀，记账软件里面的条目太多懒得选</li>
+<li>随着丢账、乱账的增多，后来觉得记的东西也没啥用，就懒得记了</li>
+</ol>
+<p>其实在这些问题中，会发现，大家抱怨的主要在于记账本身的<strong>麻烦</strong>，这个麻烦引起了一系列的问题，最终变成放弃。</p>
+<p>根据上面对记账数据模型的分析，仔细分一下其中的这个<strong>麻烦</strong>，显然并不是记录数字本身麻烦，也就是不在于公式右面的的<code>数值</code>，基本上主要麻烦在<code>数据维度</code>这个问题上。</p>
+<ol>
+<li>很显然，在消费的当时，很难马上暂停身边所有的事情1分钟，然后输入一下这个消费的详细数据维度和消费金额</li>
+<li>记账软件在努力<strong>加速</strong>这个过程，例如通过iOS的通知中心可以输入，但是再输入的时候依旧需要选择例如类别等等</li>
+<li>同时，记账软件试图<strong>简化</strong>这个过程，例如减少输入时候的数据维度，例如在输入时候只选择大类别等办法，但是这样的交易记录会严重造成后期报表可能很难进行精确统计。</li>
+</ol>
+<p>所以，交易记录的及时性和完整性，存在着一种矛盾。如何缓解这个矛盾呢？</p>
+<h1 id="利用GTD的思路重新定义记账流程"><a href="#利用GTD的思路重新定义记账流程" class="headerlink" title="利用GTD的思路重新定义记账流程"></a>利用GTD的思路重新定义记账流程</h1><blockquote class="blockquote-center"><p><strong>HOW</strong> </p>
+</blockquote>
+<p>在GTD的核心步骤分为如下几部：</p>
+<ol>
+<li>Capture - Collect what has your attension: 收集</li>
+<li>Clarify - Process what I mean: 整理</li>
+<li>Organize - Put it where it belongs: 组织</li>
+<li>Engage - Simply do: 执行</li>
+<li>Reflect - Review frequently: 回顾</li>
+</ol>
+<p>在GTD的流程中，有一个很重要的思路，就是将收集与整理/组织分开。因为定义、分析、分解一个任务内容，很难一次性完成。所以，首先采用快速的方式去清空你的大脑里的所有任务事项（收集），然后再静下心来，一条一条的分析、整理、分配任务内容(整理和组织)。利用快速简单的采集流程完成任务收集（解决及时性），利用整理组织丰富任务内容（解决完整性）。</p>
+<p>这里可以发现，这与记账中的痛点具有很高的相似性，而大家记账之所以纠结于记账过程的复杂和麻烦，是因为期望在一次行为中完成记账条目的收集和整理两个过程。所以，利用GTD的思路，将收集和整理的两个步骤完全分离开，改进记账的工作流程，可以用一种新的思路来解决手机记账的痛点。</p>
+<p>好了，我们的目标是一个完整详细的账目记录，<strong>完整详细</strong>这个词体现在数据定义上，其实就是丰富的数据维度这个层面，于是将记账分为收集和整理两个步骤，就是</p>
+<ol>
+<li>收集交易记录的过程中，最大程度的减少数据维度的输入，只记录交易金额和必要的（自动的）数据维度</li>
+<li>整理过程中，丰富和完整所有缺少的数据维度内容，从而完成最终的交易记录</li>
+</ol>
+<p>进一步来分析，减少收集阶段的数据维度，如何做到最少？要回答这问题，有一个非常重要的因素，那就是收集和整理的行为周期是什么？</p>
+<ol>
+<li>采用天为周期<br>如果采用天为周期，那么我们可以将数据维度降到最低，在我的实践中，可以将数据维度减少到只有<code>时间</code>这个维度。这个前提是因为一个人可以利用短期回忆快速的回顾一天的内容。举个例子，如果我有一条记录<code>(2017年6月1日 10:30) -&gt; 20</code>，虽然数据维度降低到只有一个，但是因为是当天发生的事情，所以可以很快的回忆起在这个时间段发生的这笔消费究竟是什么。于是，在采集阶段只要记录时间和金额就可以完成。同时，利用手机的特点，时间这个维度是自动采集的，也就是说我们完全可以变成只输入一个金额这么简单。那么，整理就变成了每天晚上的一个仪式性行为，每天晚上用5-10分钟，回忆当天的所有消费记录，并将完整的数据维度补充全面添加到记账软件或者记账本中。</li>
+<li>采用周为周期<br>如果采用周作为周期，为了记忆的唤醒，需要增加数据维度，例如增加消费地点。因为周这个单位往往对于短期记忆来说太过长久，只记录一个时间，可能已经很难回忆起当时为什么花了这笔钱。增加消费地点维度，可以更大程度上唤醒消费记忆。同时，每周末利用1个小时左右的时间，整理当周的消费。</li>
+</ol>
+<p>当然，从实践的结果来看，个人依旧是推荐以天为单位，这样可以最大程度减少收集阶段的维度，同时也降低整理时间的疲劳度。</p>
+<h1 id="利用现有的工具实现工作流"><a href="#利用现有的工具实现工作流" class="headerlink" title="利用现有的工具实现工作流"></a>利用现有的工具实现工作流</h1><blockquote class="blockquote-center"><p><strong>WHAT</strong> </p>
+</blockquote>
+<p>个人的实践，采用了天为单位，初衷还是最大程度减少手机阶段的数据维度。</p>
+<ul>
+<li><p>对于采集阶段，利用了现有的效率类软件，考虑到收集过程最好连应用都不用打开就可以做到，所以采用通知中心的快速输入会更好。支持通知中心的输入，且可以自定义流程的，自然就想到了<code>workflow</code>。下面利用<code>workflow</code>做了这个通知中心的收集程序，收集输入金额到reminder中，同时里面可以配置成支持多币种和地点自动采集。但是在按天收集这个频率下，这些信息并不是很重要，所以下面的工作流做成可以配置的，可以在出国旅行或者其他场景下开启，默认是关闭状态</p>
+  <blockquote><footer><strong>winterTT</strong><cite><a href="https://workflow.is/workflows/2056dfc601c146c78aafcd41fc632d0c" target="_blank" rel="noopener">消费记录Workflow</a></cite></footer></blockquote>
+</li>
+</ul>
+<ul>
+<li>对于整理阶段，由于我的<code>workflow</code>是加到特定的reminder中，同时<code>omnifocus</code>会自动采集对应reminder中的数据。所以，每晚可以打开<code>omnifocus</code>，在收件箱中看到所有的当天交易记录。然后，在每晚的例行或者仪式中，清空<code>收件箱</code>中的交易内容，整理到<code>MoneyWiz 2</code>中。</li>
+</ul>
+<p>最终实现的效果，类似如下的演示</p>
+<img src="https://winterttrgithubio.blob.core.windows.net/images/2017-05-23-accouting-using-gtd-way/accouting-workflow.gif" width="300">
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>或许你觉得说了这么多，最终无非就是做了一个简单的<code>workflow</code>，是的，从结果上看的确如此。<br>不过，个人认为，效率类的改进，并不只是依赖于一个革命性的创新，很多时候更重要的是从观念和细节出发，一些看似很小改进很多时候已经可以改变生活的体验。</p>
+<p>很多时候，大家往往希望利用一个app来彻底解决问题，但是现实是效率的提高以及体验的提升，更多的应该在每个步骤中发挥已有工具的优势来为我们服务。<br>试问，下载到手机里的效率应用，有多少还在堆灰，有多少只打开过几次呢？对一个效率软件的最大的敬意，是将其用到你的每一个生活片段中。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="winterTTr WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="winterTTr Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:</strong>winterTTr</li>
+  <li class="post-copyright-link">
+    <strong>Post link:</strong>
+    <a href="http://winterTTr.me/2017/05/23/accouting-using-gtd-way/" title="用GTD的思路记账">http://winterTTr.me/2017/05/23/accouting-using-gtd-way/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/效率/" rel="tag"># 效率</a>
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/应用/" rel="tag"># 应用</a>
+          
+            <a href="/tags/workflow/" rel="tag"># workflow</a>
+          
+            <a href="/tags/omnifocus/" rel="tag"># omnifocus</a>
+          
+            <a href="/tags/记账/" rel="tag"># 记账</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/01/Happy-New-Year/" rel="next" title="新的一年 - 新的开始">
+                <i class="fa fa-chevron-left"></i> 新的一年 - 新的开始
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="winterTTr" />
+            
+              <p class="site-author-name" itemprop="name">winterTTr</p>
+              <p class="site-description motion-element" itemprop="description">Memo down pieces of Life</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">65</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/winterTTr" target="_blank" title="Github"><i class="fa fa-fw fa-globe"></i>Github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/winterTTr" target="_blank" title="Twitter"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/winterTTr" target="_blank" title="Weibo"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://douban.com/people/winterTTr" target="_blank" title="Douban"><i class="fa fa-fw fa-globe"></i>Douban</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.zhihu.com/people/winterttr" target="_blank" title="Zhihu"><i class="fa fa-fw fa-globe"></i>Zhihu</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:winterTTr@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sspai.com" title="少数派" target="_blank">少数派</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.masteringemacs.org/" title="Master Emacs" target="_blank">Master Emacs</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#记账究竟是记什么"><span class="nav-text">记账究竟是记什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#交易-transaction-定义了什么"><span class="nav-text">交易(transaction)定义了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#账目报告展示了什么"><span class="nav-text">账目报告展示了什么</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么我需要改进记账流程"><span class="nav-text">为什么我需要改进记账流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用GTD的思路重新定义记账流程"><span class="nav-text">利用GTD的思路重新定义记账流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用现有的工具实现工作流"><span class="nav-text">利用现有的工具实现工作流</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">winterTTr</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Pisces</a> v6.0.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://winterTTr.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://winterTTr.me/2017/05/23/accouting-using-gtd-way/';
+        this.page.identifier = '2017/05/23/accouting-using-gtd-way/';
+        this.page.title = '用GTD的思路记账';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://winterTTr.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("WK0MG0KyIjCmTQQtCU3Fqx5A", "uiAElW6J3hMrmwqoatM9drkx");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

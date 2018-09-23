@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /css/
+Disallow: /*.js$
+Sitemap: http://winterTTr.me/sitemap.xml
+
+User-agent: bingbot
+Crawl-delay: 30
+
+User-agent: MSNBOT
+Crawl-delay: 30

@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="D_sz64DZ1b38eNfy3sac0h9jaE2HKjSg0qeS_6Ar_aw" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.0.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="github page,hexo,github,gitcafe,DNS,DNSPod,baidu,baidu爬虫,baidu spider," />
+
+
+<meta name="description" content="为什么要支持双线路的博客？  github国内访问速度缓慢，偶尔甚至无法访问 baidu爬虫被github禁用(外媒一撇) 不想放弃github  这样做可以获得什么优势：  github对应国外访问，gitcafe对应国内访问，保持速度 baidu爬虫抓取gitcafe数据，不会受到github的禁用影响 双线路同一域名，在DNS服务器上实现分流，不会因为主机不同影响最终用户的访问域名  在开始">
+<meta name="keywords" content="github page,hexo,github,gitcafe,DNS,DNSPod,baidu,baidu爬虫,baidu spider">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用DNSPod支持基于github和gitcafe双线路的hexo博客">
+<meta property="og:url" content="http://winterTTr.me/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/index.html">
+<meta property="og:site_name" content="Life &amp; Note">
+<meta property="og:description" content="为什么要支持双线路的博客？  github国内访问速度缓慢，偶尔甚至无法访问 baidu爬虫被github禁用(外媒一撇) 不想放弃github  这样做可以获得什么优势：  github对应国外访问，gitcafe对应国内访问，保持速度 baidu爬虫抓取gitcafe数据，不会受到github的禁用影响 双线路同一域名，在DNS服务器上实现分流，不会因为主机不同影响最终用户的访问域名  在开始">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/dnspod-add-domain-name.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/dnspod-setting-of-winterttr.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/godaddy-ns-record.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/godaddy-set-dnspod.jpg">
+<meta property="og:updated_time" content="2018-09-23T09:05:06.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用DNSPod支持基于github和gitcafe双线路的hexo博客">
+<meta name="twitter:description" content="为什么要支持双线路的博客？  github国内访问速度缓慢，偶尔甚至无法访问 baidu爬虫被github禁用(外媒一撇) 不想放弃github  这样做可以获得什么优势：  github对应国外访问，gitcafe对应国内访问，保持速度 baidu爬虫抓取gitcafe数据，不会受到github的禁用影响 双线路同一域名，在DNS服务器上实现分流，不会因为主机不同影响最终用户的访问域名  在开始">
+<meta name="twitter:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/dnspod-add-domain-name.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Life & Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://winterTTr.me/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>使用DNSPod支持基于github和gitcafe双线路的hexo博客 | Life & Note</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67136287-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-67136287-1');
+</script>
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12217b6eff7690192f4e4469013eee76";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Life & Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">winterTTr Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories<span class="badge">13</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives<span class="badge">21</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags<span class="badge">74</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />Sitemap</a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WRpxR8GrCr4jNe6LcLyU','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterTTr.me/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winterTTr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Life & Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用DNSPod支持基于github和gitcafe双线路的hexo博客</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-24T23:39:32+00:00">2015-10-24</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/internet/" itemprop="url" rel="index"><span itemprop="name">internet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/" class="leancloud_visitors" data-flag-title="使用DNSPod支持基于github和gitcafe双线路的hexo博客">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>为什么要支持双线路的博客？</p>
+<ul>
+<li>github国内访问速度缓慢，偶尔甚至无法访问</li>
+<li>baidu爬虫被github禁用(<a href="https://news.ycombinator.com/item?id=9275041" target="_blank" rel="noopener">外媒一撇</a>)</li>
+<li>不想放弃github</li>
+</ul>
+<p>这样做可以获得什么优势：</p>
+<ul>
+<li>github对应国外访问，gitcafe对应国内访问，保持速度</li>
+<li>baidu爬虫抓取gitcafe数据，不会受到github的禁用影响</li>
+<li>双线路同一域名，在DNS服务器上实现分流，不会因为主机不同影响最终用户的访问域名</li>
+</ul>
+<p>在开始本文之前，强烈建议读一下我的另一篇文章<a href="http://winterTTr.me/2015/10/23/from-dns-to-github-custom-domain/">从DNS到github pages自定义域名 – 漫谈域名那些事</a>，可以帮助你熟悉过程中的很多原理。</p>
+<a id="more"></a>
+<h1 id="更改hexo的配置文件"><a href="#更改hexo的配置文件" class="headerlink" title="更改hexo的配置文件"></a>更改hexo的配置文件</h1><p>实现github和gitcafe部署<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">deploy</span>:</span><br><span class="line">  <span class="attribute">type</span>: git</span><br><span class="line">  <span class="attribute">repo</span>:</span><br><span class="line">    <span class="attribute">github</span>: <span class="attribute">https</span>:<span class="comment">//github.com/winterTTr/winterTTr.github.io.git</span></span><br><span class="line">    <span class="attribute">gitcafe</span>: <span class="attribute">https</span>:<span class="comment">//gitcafe.com/winterTTr/winterTTr.git</span></span><br></pre></td></tr></table></figure></p>
+<p>这样就可以使用<code>hexo delpy</code>直接部署github和gitcafe了。</p>
+<p>这里要说一句，github使用master分支作为静态页展示，gitcafe使用gitcafe-pages分支作为静态页展示。这点hexo的deploy里面已经很好的处理了，我们不用特别指定。</p>
+<h1 id="申请DNSPod添加域名管理"><a href="#申请DNSPod添加域名管理" class="headerlink" title="申请DNSPod添加域名管理"></a>申请DNSPod添加域名管理</h1><p>NDSPod的域名解析服务中，提供根据线路进行不同的路由的功能是免费的，这也是为什么选择DNSPod的原因</p>
+<p>添加了域名后，DNSPod会自动导入当前的域名下的各种记录<br><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/dnspod-add-domain-name.jpg" alt="dnspod-add-domain-name.jpg"></p>
+<p>在这里我们可设置针对不同线路的CNAME记录</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/dnspod-setting-of-winterttr.jpg" alt="dnspod-setting-of-winterttr.jpg"></p>
+<h1 id="在域名提供商更改NS记录"><a href="#在域名提供商更改NS记录" class="headerlink" title="在域名提供商更改NS记录"></a>在域名提供商更改NS记录</h1><p>我是用的是godaddy申请的域名，godaddy中NS记录不是在<code>Zone File</code>的配置下，而是点击域名旁边的下拉列表更改的<br><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/godaddy-ns-record.jpg" alt="godaddy-ns-record.jpg"></p>
+<p>将其设置成DNSPod的服务器地址</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-10-24-use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/godaddy-set-dnspod.jpg" alt="godaddy-set-dnspod.jpg"></p>
+<h1 id="等待"><a href="#等待" class="headerlink" title="等待"></a>等待</h1><p>经过上面设置后，还需要等待全球DNS服务器的递归更新。</p>
+<p>然后可以测试从不同地区的主机效果：</p>
+<p>这里是从家里的机器：</p>
+<blockquote>
+<p>MacBook-Pro:~ winterTTr$ dig winterttr.me<br>; &lt;&lt;&gt;&gt; DiG 9.8.3-P1 &lt;&lt;&gt;&gt; winterttr.me<br>;; global options: +cmd<br>;; Got answer:<br>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 7737<br>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 10</p>
+<p>;; QUESTION SECTION:<br>;winterttr.me.            IN    A</p>
+<p>;; ANSWER SECTION:<br>winterttr.me.        600    IN    CNAME    winterttr.gitcafe.io.<br>winterttr.gitcafe.io.    600    IN    A    103.56.54.5</p>
+<p>;; AUTHORITY SECTION:<br>gitcafe.io.        600    IN    NS    f1g1ns1.dnspod.net.<br>gitcafe.io.        600    IN    NS    f1g1ns2.dnspod.net.</p>
+<p>;; ADDITIONAL SECTION:<br>f1g1ns1.dnspod.net.    171513    IN    A    180.153.9.189<br>f1g1ns1.dnspod.net.    171513    IN    A    182.140.167.166<br>f1g1ns1.dnspod.net.    171513    IN    A    111.30.132.180<br>f1g1ns1.dnspod.net.    171513    IN    A    113.108.80.138<br>f1g1ns1.dnspod.net.    171513    IN    A    125.39.208.193<br>f1g1ns2.dnspod.net.    55977    IN    A    101.226.30.224<br>f1g1ns2.dnspod.net.    55977    IN    A    112.90.82.194<br>f1g1ns2.dnspod.net.    55977    IN    A    115.236.137.40<br>f1g1ns2.dnspod.net.    55977    IN    A    115.236.151.191<br>f1g1ns2.dnspod.net.    55977    IN    A    182.140.167.188</p>
+<p>;; Query time: 1649 msec<br>;; SERVER: 192.168.0.1#53(192.168.0.1)<br>;; WHEN: Sat Oct 24 17:45:10 2015<br>;; MSG SIZE  rcvd: 294</p>
+</blockquote>
+<p>然后登陆一台国外的主机：</p>
+<blockquote>
+<p>~$ dig winterttr.me<br>; &lt;&lt;&gt;&gt; DiG 9.9.5-3ubuntu0.4-Ubuntu &lt;&lt;&gt;&gt; winterttr.me<br>;; global options: +cmd<br>;; Got answer:<br>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 37875<br>;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1</p>
+<p>;; OPT PSEUDOSECTION:<br>; EDNS: version: 0, flags:; udp: 1280<br>;; QUESTION SECTION:<br>;winterttr.me.            IN    A</p>
+<p>;; ANSWER SECTION:<br>winterttr.me.        600    IN    CNAME    winterttr.github.io.<br>winterttr.github.io.    854    IN    CNAME    github.map.fastly.net.<br>github.map.fastly.net.    30    IN    A    103.245.222.133</p>
+<p>;; Query time: 173 msec<br>;; SERVER: 100.72.124.100#53(100.72.124.100)<br>;; WHEN: Sat Oct 24 09:46:29 UTC 2015<br>;; MSG SIZE  rcvd: 125</p>
+</blockquote>
+<p>完成！~</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="winterTTr WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="winterTTr Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:</strong>winterTTr</li>
+  <li class="post-copyright-link">
+    <strong>Post link:</strong>
+    <a href="http://winterTTr.me/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/" title="使用DNSPod支持基于github和gitcafe双线路的hexo博客">http://winterTTr.me/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/github-page/" rel="tag"># github page</a>
+          
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
+          
+            <a href="/tags/github/" rel="tag"># github</a>
+          
+            <a href="/tags/gitcafe/" rel="tag"># gitcafe</a>
+          
+            <a href="/tags/DNS/" rel="tag"># DNS</a>
+          
+            <a href="/tags/DNSPod/" rel="tag"># DNSPod</a>
+          
+            <a href="/tags/baidu/" rel="tag"># baidu</a>
+          
+            <a href="/tags/baidu爬虫/" rel="tag"># baidu爬虫</a>
+          
+            <a href="/tags/baidu-spider/" rel="tag"># baidu spider</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/24/python-passing-arguments-as-value-or-reference/" rel="next" title="Python的函数参数传递：传值？引用？">
+                <i class="fa fa-chevron-left"></i> Python的函数参数传递：传值？引用？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/" rel="prev" title="在ios设备上使用surge配合shadowsocks开启网络全局代理">
+                在ios设备上使用surge配合shadowsocks开启网络全局代理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="winterTTr" />
+            
+              <p class="site-author-name" itemprop="name">winterTTr</p>
+              <p class="site-description motion-element" itemprop="description">Memo down pieces of Life</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">65</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/winterTTr" target="_blank" title="Github"><i class="fa fa-fw fa-globe"></i>Github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/winterTTr" target="_blank" title="Twitter"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/winterTTr" target="_blank" title="Weibo"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://douban.com/people/winterTTr" target="_blank" title="Douban"><i class="fa fa-fw fa-globe"></i>Douban</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.zhihu.com/people/winterttr" target="_blank" title="Zhihu"><i class="fa fa-fw fa-globe"></i>Zhihu</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:winterTTr@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sspai.com" title="少数派" target="_blank">少数派</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.masteringemacs.org/" title="Master Emacs" target="_blank">Master Emacs</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#更改hexo的配置文件"><span class="nav-number">1.</span> <span class="nav-text">更改hexo的配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#申请DNSPod添加域名管理"><span class="nav-number">2.</span> <span class="nav-text">申请DNSPod添加域名管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在域名提供商更改NS记录"><span class="nav-number">3.</span> <span class="nav-text">在域名提供商更改NS记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#等待"><span class="nav-number">4.</span> <span class="nav-text">等待</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">winterTTr</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Pisces</a> v6.0.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://winterTTr.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://winterTTr.me/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/';
+        this.page.identifier = '2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/';
+        this.page.title = '使用DNSPod支持基于github和gitcafe双线路的hexo博客';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://winterTTr.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("WK0MG0KyIjCmTQQtCU3Fqx5A", "uiAElW6J3hMrmwqoatM9drkx");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

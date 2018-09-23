@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="D_sz64DZ1b38eNfy3sac0h9jaE2HKjSg0qeS_6Ar_aw" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.3" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.0.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="surge,ios,proxy,tun," />
+
+
+<meta name="description" content="ios上的网络代理一直是我诟病的话题之一。  手机网络不能使用代理 默认的wifi下代理只能支持http  随着ios9添加的新的Network Extension的特性，surge(App Store)出现了，利用surge所提供给我们的功能，我们将给出一个近乎完美的全局代理方案。">
+<meta name="keywords" content="surge,ios,proxy,tun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在ios设备上使用surge配合shadowsocks开启网络全局代理">
+<meta property="og:url" content="http://winterTTr.me/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/index.html">
+<meta property="og:site_name" content="Life &amp; Note">
+<meta property="og:description" content="ios上的网络代理一直是我诟病的话题之一。  手机网络不能使用代理 默认的wifi下代理只能支持http  随着ios9添加的新的Network Extension的特性，surge(App Store)出现了，利用surge所提供给我们的功能，我们将给出一个近乎完美的全局代理方案。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge-first-open.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_edit.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_edit_existing_config.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_proxy.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_rule.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_download.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_shadowsocks.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_request_analytics.jpg">
+<meta property="og:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_change_rule.jpg">
+<meta property="og:updated_time" content="2018-09-23T09:05:06.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在ios设备上使用surge配合shadowsocks开启网络全局代理">
+<meta name="twitter:description" content="ios上的网络代理一直是我诟病的话题之一。  手机网络不能使用代理 默认的wifi下代理只能支持http  随着ios9添加的新的Network Extension的特性，surge(App Store)出现了，利用surge所提供给我们的功能，我们将给出一个近乎完美的全局代理方案。">
+<meta name="twitter:image" content="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Life & Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://winterTTr.me/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>在ios设备上使用surge配合shadowsocks开启网络全局代理 | Life & Note</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67136287-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-67136287-1');
+</script>
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?12217b6eff7690192f4e4469013eee76";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Life & Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">winterTTr Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories<span class="badge">13</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives<span class="badge">21</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags<span class="badge">74</span>
+              </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />Sitemap</a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WRpxR8GrCr4jNe6LcLyU','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://winterTTr.me/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="winterTTr">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Life & Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">在ios设备上使用surge配合shadowsocks开启网络全局代理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-04T21:06:33+00:00">2015-11-04</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/internet/" itemprop="url" rel="index"><span itemprop="name">internet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/" class="leancloud_visitors" data-flag-title="在ios设备上使用surge配合shadowsocks开启网络全局代理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>ios上的网络代理一直是我诟病的话题之一。</p>
+<ol>
+<li>手机网络不能使用代理</li>
+<li>默认的wifi下代理只能支持http</li>
+</ol>
+<p>随着ios9添加的新的<code>Network Extension</code>的特性，surge(<a href="https://itunes.apple.com/cn/app/surge-web-developer-tool-proxy/id1040100637" target="_blank" rel="noopener">App Store</a>)出现了，利用surge所提供给我们的功能，我们将给出一个近乎完美的全局代理方案。</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge.jpg" alt="surge.jpg"></p>
+<a id="more"></a>
+<h1 id="Surge是什么"><a href="#Surge是什么" class="headerlink" title="Surge是什么"></a>Surge是什么</h1><p>Surge是一个ios网络包抓取分析工具，它是基于ios9中<code>Network Extension</code>和<code>VPN</code>的新特性而来。<br>Surge是一个基于<code>规则(Rule)</code>的可配置型工具，我们可以利用Surge在ios网络层中添加代理，这样可以将ios设备的很多网络数据进行截获，从而实现对网络数据的分析和采集。</p>
+<p>如果大家在windows上经常发开http程序的话，想必著名的<code>fiddler</code>大家一定不会陌生，在利用代理进行网络数据包分析方面，Surge可以说与<code>fiddler</code>的做法是很相似的。</p>
+<p>如果说surge的初衷，还是一个网络包抓取和分析工具的话，它的基于<code>规则</code>的数据截获和转发能力，给我们提供了非常好的网络代理功能。<br>如果Surge可以长久的存活下去的话，想必一定是将来一个非常有效的ios设备网络代理工具。</p>
+<p>如果想了解surge的具体细节，可以参考官方的主页介绍 <a href="http://surge.run" target="_blank" rel="noopener">surge.run</a>。</p>
+<h1 id="Surge配置界面"><a href="#Surge配置界面" class="headerlink" title="Surge配置界面"></a>Surge配置界面</h1><p>Surge并不是一个打开即可以使用的工具，它是一个高可配置的工具。<br>打开Surge之后，我们只有一个默认的配置文件。<br>我们可以看到，默认的配置文件是所有的网络都是直接进行访问(all to Direct)。</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge-first-open.jpg" alt="surge-first-open.jpg"></p>
+<h2 id="编辑已有配置"><a href="#编辑已有配置" class="headerlink" title="编辑已有配置"></a>编辑已有配置</h2><p>点击<code>Edit</code>之后，我们可以进行更多的设置</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_edit.jpg" alt="surge_edit.jpg"></p>
+<p>对于已有的文件，我们可以更改名称，添加更多的代理，添加规则</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_edit_existing_config.jpg" alt="surge_edit_existing_config.jpg"></p>
+<h2 id="代理设置"><a href="#代理设置" class="headerlink" title="代理设置"></a>代理设置</h2><p>这个是代理设置界面，在这里，可以添加三种类型的代理，<code>http</code>|<code>https</code>|<code>socks5</code>。<br><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_proxy.jpg" alt="surge_proxy.jpg"></p>
+<p>我们发现，这里并没有我们所需要的<code>shadowsocks</code>。是的，<code>shadowsocks</code>在界面似乎不可以直接添加，只能通过直接编辑配置文件，添加custom类型的代理。我们随后会说到。</p>
+<h2 id="添加规则"><a href="#添加规则" class="headerlink" title="添加规则"></a>添加规则</h2><p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_rule.jpg" alt="surge_rule.jpg"><br>在规则配置界面中，可以添加三种很多种不同的预定义类型的规则</p>
+<ul>
+<li>domain: 域名完全匹配</li>
+<li>suffix: 匹配域名的结尾部分</li>
+<li>keyword: 域名中包含这个关键字</li>
+<li>ip: 如果请求的ip地址在范围中， 使用ip加mask的形式，例如：<code>192.168.1.1/24</code></li>
+<li>GeoIP: 基于ip的地理位置，例如<code>CN(中国)</code>，<code>US(美国)</code>等等</li>
+</ul>
+<p>我们添加了规则之后，可以选择当数据包满足规则的时候如何处理：</p>
+<ul>
+<li>DIRECT: 也就是我们的直连，必经过任何转发，用于访问国内网络</li>
+<li>REJECT: 拒接链接，比较多的是拦截特定的包，例如广告请求</li>
+<li>[代理名称]: 默认是没有这一项的，当我们添加了不同代理之后，没一个添加的代理也会出现在这里，所以，我们可以将特定的网络请求转发到一个我们预定义的代理上面，这也是surge中本文最关心的功能。</li>
+</ul>
+<h2 id="网络下载配置文件"><a href="#网络下载配置文件" class="headerlink" title="网络下载配置文件"></a>网络下载配置文件</h2><p>我们知道，很多时候，大家对于手工配置上文提到的这些东西，是很闲麻烦的。<br>所以，网络下载配置文件也是surge非常人性化的feature，我们可以通过URL直接下载surge的配置文件，让他人的东西劳动成果很快的为我们所用。<br>这里分享一个很不错的配置文件，源自<code>surge.pm</code>网站。</p>
+<p>在<code>编辑已有配置</code>中，选择<code>Download configuration from URL</code>，然后添加</p>
+<blockquote>
+<p><a href="http://surge.pm/main.conf" target="_blank" rel="noopener">http://surge.pm/main.conf</a></p>
+</blockquote>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_download.jpg" alt="surge_download.jpg"></p>
+<h2 id="更改shadowsocks配置"><a href="#更改shadowsocks配置" class="headerlink" title="更改shadowsocks配置"></a>更改shadowsocks配置</h2><p>我们上文提到的配置文件中，已经为我们添加了shadowsocks的代理，不过，添加的代理只是例子，不能使用，我们需要利用上面提到的更改配置文件的办法，更改这个代理到我们自己的shadowsocks服务器的配置。</p>
+<p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_shadowsocks.jpg" alt="surge_shadowsocks.jpg"></p>
+<ul>
+<li>server: 更改为自己的ss服务器的地址</li>
+<li>port: 为端口号</li>
+<li>Username: 直接被当成了ss的加密方式来使用了，不再作为用户名</li>
+<li>password: ss的登录密码</li>
+</ul>
+<p>这样就可以直接使用这个配置文件进行shadowsocks的网络代理了。</p>
+<h1 id="Surge的网络监控功能"><a href="#Surge的网络监控功能" class="headerlink" title="Surge的网络监控功能"></a>Surge的网络监控功能</h1><p>我们上面提到了很多的surge的配置，当然，最原始的初衷，还是为了使用surge进行网络监控。我们可以在<code>Analytics</code>选卡中看到</p>
+<h2 id="请求解析"><a href="#请求解析" class="headerlink" title="请求解析"></a>请求解析</h2><p><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_request_analytics.jpg" alt="surge_request_analytics.jpg"><br>在请求界面中，我们可以看到具体的每个请求的header和一些相关的参数。据说作者之后会加入请求的body的显示。</p>
+<h2 id="规则分析"><a href="#规则分析" class="headerlink" title="规则分析"></a>规则分析</h2><p>在<code>Rule</code>界面中，我们也可以看到规则的相应情况，而且，最人性化的，我们在这里可以动态添加规则项<br><img src="https://winterttrgithubio.blob.core.windows.net/images/2015-11-04-using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/surge_change_rule.jpg" alt="surge_change_rule.jpg"></p>
+<hr>
+<p>经过上面的介绍，相比大家已经对surge的功能有了比较详细的了解，打开配置文件中，大部分的配置行都和我们之前介绍的界面相关，语法很容易理解。也希望大家多多分享自己的配置文件，服务于大家。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="winterTTr WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="winterTTr Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:</strong>winterTTr</li>
+  <li class="post-copyright-link">
+    <strong>Post link:</strong>
+    <a href="http://winterTTr.me/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/" title="在ios设备上使用surge配合shadowsocks开启网络全局代理">http://winterTTr.me/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> unless stating additionally.</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/surge/" rel="tag"># surge</a>
+          
+            <a href="/tags/ios/" rel="tag"># ios</a>
+          
+            <a href="/tags/proxy/" rel="tag"># proxy</a>
+          
+            <a href="/tags/tun/" rel="tag"># tun</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/24/use-dnspod-to-support-hexo-blog-on-github-and-gitcafe/" rel="next" title="使用DNSPod支持基于github和gitcafe双线路的hexo博客">
+                <i class="fa fa-chevron-left"></i> 使用DNSPod支持基于github和gitcafe双线路的hexo博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/11/07/hexo-cannot-use-space-within-tag-arguments/" rel="prev" title="hexo cannot use space within tag plugin arguments">
+                hexo cannot use space within tag plugin arguments <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="winterTTr" />
+            
+              <p class="site-author-name" itemprop="name">winterTTr</p>
+              <p class="site-description motion-element" itemprop="description">Memo down pieces of Life</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">65</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/winterTTr" target="_blank" title="Github"><i class="fa fa-fw fa-globe"></i>Github</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/winterTTr" target="_blank" title="Twitter"><i class="fa fa-fw fa-globe"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/winterTTr" target="_blank" title="Weibo"><i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://douban.com/people/winterTTr" target="_blank" title="Douban"><i class="fa fa-fw fa-globe"></i>Douban</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.zhihu.com/people/winterttr" target="_blank" title="Zhihu"><i class="fa fa-fw fa-globe"></i>Zhihu</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:winterTTr@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://sspai.com" title="少数派" target="_blank">少数派</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.masteringemacs.org/" title="Master Emacs" target="_blank">Master Emacs</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Surge是什么"><span class="nav-text">Surge是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Surge配置界面"><span class="nav-text">Surge配置界面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑已有配置"><span class="nav-text">编辑已有配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代理设置"><span class="nav-text">代理设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加规则"><span class="nav-text">添加规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络下载配置文件"><span class="nav-text">网络下载配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更改shadowsocks配置"><span class="nav-text">更改shadowsocks配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Surge的网络监控功能"><span class="nav-text">Surge的网络监控功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#请求解析"><span class="nav-text">请求解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#规则分析"><span class="nav-text">规则分析</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">winterTTr</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Pisces</a> v6.0.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.3"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://winterTTr.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'http://winterTTr.me/2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/';
+        this.page.identifier = '2015/11/04/using-surge-with-shadowsocks-under-ios-to-enable-global-network-proxy/';
+        this.page.title = '在ios设备上使用surge配合shadowsocks开启网络全局代理';
+      };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://winterTTr.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        loadComments();
+      
+    </script>
+  
+
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("WK0MG0KyIjCmTQQtCU3Fqx5A", "uiAElW6J3hMrmwqoatM9drkx");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
